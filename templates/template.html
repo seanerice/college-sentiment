@@ -9,6 +9,20 @@
     .red{
 	      background:	#ed1b24 ;
     }
+    .content{
+      width:85%;
+      height: 400px;
+      align-content: center;
+      border-style: solid;
+      margin: auto;
+      padding: 15px;
+    }
+    .outside{
+      width:95%;
+      align-content: center;
+      margin: auto;
+      padding: 15px;
+    }
     
 </style>
 <html lang="en">
@@ -39,16 +53,15 @@
     <div class="box red" >
         <img src="/static/images/RPIbanner.jpg" height="150px" >
     </div>
-
-    <h1>College Forum Sentiment Analysis</h1>
-    <br>
-    <br>
-
-
-    <p>NLP Sentiment analysis of comments pulled from various college review websites (i.e. "RateMyProf", "Unigo", "Reddit"). 
-      Please select your college below or paste text into the box to continue. </p>
-    {% block content %}{% endblock %}
-
+    <div class="outside">
+      <h1>College Forum Sentiment Analysis</h1>
+      <br>
+      <br>
+      <p>NLP Sentiment analysis of comments pulled from various college review websites (i.e. "RateMyProf", "Unigo", "Reddit"). 
+        Please select your college below or paste text into the box to continue.
+      </p>
+      {% block content %}{% endblock %}
+  </div>
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>

@@ -2,21 +2,47 @@
 {%extends 'template.html' %}
 
 {% block content %}
+<div class="content">
+    <form>
+        <fieldset>
+            <legend>Please Select Your University</legend>
+            <p>
+                <label>Select School</label>
+                <select id = "myList">
+                    <option value = "1">Rensselaer Polytechnic Institute</option>
+                    <option value = "2">College A</option>
+                    <option value = "3">College B</option>
+                    <option value = "4">College C</option>
+                </select>
+                <input type="submit" value="Submit">
+            </p>
+        </fieldset>
+    </form>
+    <form>
+        <legend>To analyze a different forum, paste text to be analyzed below:</legend>
+        <textarea rows="8" cols="85">
+            Paste text to be analyzed here.
+        </textarea>
+        <input type="submit" value="Submit">
+    </form>
+</div>
+<br>
+<br>
+<div class="content">
+    <h1 align="center"> RESULTS for [SCHOOL NAME]</h1>
+    <br>
+    <br>
 
-<form>
-    <fieldset>
-        <legend>Please Select Your University</legend>
-        <p>
-            <label>Select School</label>
-            <select id = "myList">
-                <option value = "1">Rensselaer Polytechnic Institute</option>
-                <option value = "2">College A</option>
-                <option value = "3">College B</option>
-                <option value = "4">College C</option>
-            </select>
-            <input type="submit" value="Submit">
-        </p>
-    </fieldset>
-</form>
+    <h2 align= "center" >Average Happiness Score: 7 </h2> 
+    <h3> Top Positive Post:</h3>
+    <br>
+    <p> RPI DOESNT SUCK</p>
+    <br>
+    <h3> Top Negative Post:</h3>
+    <br>
+    <p> RPI DOES SUCK</p>
+    <br>
+
+</div>
 
      {% endblock %}
