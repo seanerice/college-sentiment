@@ -1,21 +1,21 @@
-<h1>WELCOME TO COLLEGE SENTIMENT ANALYSIS.
-    
-    
-    PLEASE SELECT YOUR COLLEGE:
+<!DOCTYPE html>
+{%extends 'template.html' %}
 
+{% block content %}
 
-</h1>
 <form>
-        <fieldset>
-           <legend>Please Select Your University</legend>
-           <p>
-              <label>Select School</label>
-              <select id = "myList">
+    <fieldset>
+        <legend>Please Select Your University</legend>
+        <p>
+            <label>Select School</label>
+            <select id = "myList">
                 <option value = "1">Rensselaer Polytechnic Institute</option>
                 <option value = "2">College A</option>
                 <option value = "3">College B</option>
                 <option value = "4">College C</option>
               </select>
-           </p>
-        </fieldset>
-     </form>
+        </p>
+    </fieldset>
+</form>
+
+     {% endblock %}
