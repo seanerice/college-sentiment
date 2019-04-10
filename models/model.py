@@ -1,5 +1,5 @@
 from textblob import TextBlob
-from textblob.sentiments import NaiveBayesAnalyzer
+from textblob.classifiers import NaiveBayesClassifier
 
 class DataParser:
     def __init__(self):
@@ -17,14 +17,23 @@ class JsonParser(DataParser):
 
 class Model:
     def __init__(self):
-        self.data_parser
         pass
 
-    def train(self, data):
+    def classify(self, sentence):
+        pass
+
+    def train(self, data, eval=None, d_print=False):
         pass
 
     def test(self, data):
         pass
+
+    def save(self, filename):
+        pass
+
+    def load(self, filename):
+        pass
+
 
 
 class TBSentiment(Model):
@@ -35,19 +44,24 @@ class TBSentiment(Model):
         Model (): Initialize the model.
     """
 
-
     def __init__(self):
-        self.data_parser
-        pass
+        self.cl = NaiveBayesClassifier([])
 
-    def train(self, data):
+    def classify(self, comment):
+        prob_dist = self.cl.prob_classify(comment)
+        pol_pred = prob_dist.max()
+        confidence = prob_dist.prob(pol_pred)
+        return pol_pred, confidence
+
+    def train(self, data, eval=None, d_print=False):
         """Train the TextBlob object on custom data.
         
         Args:
             data (:obj:`list` of :obj:`tuple`): Take a list of tuples with
                 format (comment, polarity in ["pos", "neg"]).
         """
-        pass
+
+        self.cl.update(data)
 
     def test(self, data):
         """Test the TextBlob object on custom data.
@@ -59,4 +73,12 @@ class TBSentiment(Model):
         Returns:
             :obj:`tuple`: Return the successes and failures in a list (:obj:`list`, :obj:`list`)
         """
-        pass
+        successes = []
+        failures = []
+
+        for cmt, pol in data:
+            pred, conf = self.classify(cmt)
+            if (pred == pol):
+                successes.append((cmt, pred, conf))
+            else:
+                failures.append((cmt, pred, conf))
