@@ -1,3 +1,6 @@
+from textblob import TextBlob
+from textblob.sentiments import NaiveBayesAnalyzer
+
 class DataParser:
     def __init__(self):
         pass
