@@ -80,4 +80,8 @@ if __name__ == "__main__":
     elif (args.f_type == 'csv'):
         file_reader = read_csv
 
+    all_s = []
+
+    num_train, num_test, num_eval = 0.6, 0.25, 0.15
+    train_s, test_s, eval_s = [], [], []
 
