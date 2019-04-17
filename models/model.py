@@ -73,12 +73,4 @@ class TBSentiment(Model):
         Returns:
             :obj:`tuple`: Return the successes and failures in a list (:obj:`list`, :obj:`list`)
         """
-        successes = []
-        failures = []
-
-        for cmt, pol in data:
-            pred, conf = self.classify(cmt)
-            if (pred == pol):
-                successes.append((cmt, pred, conf))
-            else:
-                failures.append((cmt, pred, conf))
+        return self.cl.accuracy(data)
