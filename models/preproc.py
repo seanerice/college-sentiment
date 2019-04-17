@@ -1,3 +1,82 @@
+import json
+import csv
+import argparse
+
+def read_jsonfile(rmp_path, unigo_path):
+    """Read the word list (json) from file and return the list of words.
+    Args:
+        filename (str): Path of file to read.
+    Returns:
+        :obj:`list` of :obj:`tuple`: List of lines, with each word on the line
+            in a tuple.
+    """
+
+    rmp_comment_data = []
+    unigo_comment_data = []
+
+    with open(rmp_path, 'r') as rmp_file:
+        rmp_data = json.load(rmp_file)
+        unusable_comments = ['not specified', 'no comment', 'no comments']
+        for k, v in rmp_data.items():
+            check_comment = v['comment'].lower()
+            if check_comment[-1] == '.':
+                check_comment = check_comment[:-1]
+            if check_comment not in unusable_comments and v['score'] != 3:
+                polarity = ''
+                if int(v['score']) < 3:
+                    polarity = 'neg'
+                else:
+                    polarity = 'pos'
+                comment_ = (v['comment'], polarity)
+                rmp_comment_data.append(comment_)
+
+    with open(unigo_path, 'r') as unigo_file:
+        unigo_data = json.load(unigo_file)
+        for k, v in unigo_data.items():
+            for comment in v:
+                if comment['rating'] != 3:
+                    polarity = ''
+                    if int(comment['rating']) < 3:
+                        polarity = 'neg'
+                    else:
+                        polarity = 'pos'
+                    stripped_body = comment['body'].strip()
+                    comment_ = (stripped_body, polarity)
+                    unigo_comment_data.append(comment_)
+
+    return rmp_comment_data, unigo_comment_data
+
+def preprocess_data(data, prefix):
+    train_data_size = int(len(data) * 0.8)
+    test_data_size = int(len(data) * 0.15)
+
+    train_data = data[:train_data_size]
+    test_data = data[train_data_size:train_data_size+test_data_size]
+    eval_data = data[train_data_size+test_data_size:]
+
+    print(prefix, len(train_data))
+    print(prefix, len(test_data))
+    print(prefix, len(eval_data))
+
+    train_data_path = '../preprocess_data/' + prefix + '_train_data.csv'
+    test_data_path = '../preprocess_data/' + prefix + '_test_data.csv'
+    eval_data_path = '../preprocess_data/' + prefix + '_eval_data.csv'
+
+    with open(train_data_path, 'w', newline='') as train_data_file:
+        writer = csv.writer(train_data_file, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
+        for d in train_data:
+            writer.writerow([d[0], d[1]])
+
+    with open(test_data_path, 'w', newline='') as test_data_file:
+        writer = csv.writer(test_data_file, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
+        for d in test_data:
+            writer.writerow([d[0], d[1]])
+
+    with open(eval_data_path, 'w', newline='') as eval_data_file:
+        writer = csv.writer(eval_data_file, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
+        for d in eval_data:
+            writer.writerow([d[0], d[1]])
+
 def read_csv(pathname):
     """Textfile from csv file and return the list of words.
 
@@ -25,39 +104,6 @@ def read_csv(pathname):
             line_count += 1
         return rows 
 
-
-def write_textfile(filename, tpl_list):
-    """Writes a list of tuples to file. Write each tuple to file
-    separated by space. Each list item is newline separated.
-
-    Args:
-        filename (str): Path of file to write.
-        tpl_list (:obj:`list` of :obj:`tuple`): List of tuples to write.
-    """
-    with open(filename, "w") as file:
-        for tpl in tpl_list:
-            line_str = ""
-            for obj in tpl:
-                line_str += " " + str(obj)
-            file.write(line_str + "\n")
-
-
-def read_jsonfile(pathname):
-    """Read the word list (json) from file and return the list of words.
-
-    Args:
-        filename (str): Path of file to read.
-
-    Returns:
-        :obj:`list` of :obj:`tuple`: List of lines, with each word on the line
-            in a tuple.
-    """
-
-    with open(pathname, 'r') as infile:
-        data = json.load(infile)
-        return data
-    return None
-
 if __name__ == "__main__":
     # parse command-line arguments
     parser = argparse.ArgumentParser(description='Process some integers.')
@@ -73,11 +119,10 @@ if __name__ == "__main__":
     args = parser.parse_args()
     print(args)
 
-    # Read file from either plaintext file or json file
-    file_reader = read_textfile
-    if (args.f_type == 'json'):
-        file_reader = read_jsonfile
-    elif (args.f_type == 'csv'):
-        file_reader = read_csv
+    rmp_file = '../rmp_data.json'
+    unigo_file = '../unigo_data.json'
 
+    rmp_data, unigo_data = read_jsonfile(rmp_file, unigo_file)
 
+    preprocess_data(rmp_data, 'RMP')
+    preprocess_data(unigo_data, 'UNIGO')
