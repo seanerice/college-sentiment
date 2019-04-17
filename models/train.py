@@ -50,14 +50,18 @@ if __name__ == "__main__":
     # load data from file
     train_s, test_s, eval_s = None, None, None
     if (args.train is not None):
+        print("Reading train data.")
         train_s = file_reader(args.train)
     if (args.test is not None):
+        print("Reading test data.")
         test_s = file_reader(args.train)
     if (args.eval is not None):
+        print("Reading eval data.")
         eval_s = file_reader(args.eval)
     print(train_s, test_s, eval_s)
 
     # Pick model type
+    print("Using model TBSentiment.")
     model_type = TBSentiment
 
     # create new model or load existing model
@@ -65,10 +69,12 @@ if __name__ == "__main__":
 
     # train model on train-data
     if (train_s is not None):
+        print("Training.")
         model_obj.train(train_s, eval=eval_s, d_print=True)
     
     if (test_s is not None):
+        print("Testing.")
         succ, fail = model_obj.test(test_s)
-        print(succ, fail)
+        acc = len(succ) / (len(succ) + len(fail))
 
     model_obj.save("")
