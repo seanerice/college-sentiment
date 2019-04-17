@@ -1,6 +1,7 @@
 import json
 import csv
 import argparse
+import math
 
 def read_jsonfile(rmp_path, unigo_path):
     """Read the word list (json) from file and return the list of words.
@@ -11,12 +12,14 @@ def read_jsonfile(rmp_path, unigo_path):
             in a tuple.
     """
 
-    rmp_comment_data = []
-    unigo_comment_data = []
+    rmp_comment_data = {}
+    unigo_comment_data = {}
 
     with open(rmp_path, 'r') as rmp_file:
+        rmp_pos = []
+        rmp_neg = []
         rmp_data = json.load(rmp_file)
-        unusable_comments = ['not specified', 'no comment', 'no comments']
+        unusable_comments = ['not specified', 'no comment', 'no comments', 'none']
         for k, v in rmp_data.items():
             check_comment = v['comment'].lower()
             if check_comment[-1] == '.':
@@ -25,12 +28,18 @@ def read_jsonfile(rmp_path, unigo_path):
                 polarity = ''
                 if int(v['score']) < 3:
                     polarity = 'neg'
+                    comment_ = (v['comment'], polarity)
+                    rmp_neg.append(comment_)
                 else:
                     polarity = 'pos'
-                comment_ = (v['comment'], polarity)
-                rmp_comment_data.append(comment_)
+                    comment_ = (v['comment'], polarity)
+                    rmp_pos.append(comment_)
+        rmp_comment_data['pos'] = rmp_pos
+        rmp_comment_data['neg'] = rmp_neg
 
     with open(unigo_path, 'r') as unigo_file:
+        unigo_pos = []
+        unigo_neg = []
         unigo_data = json.load(unigo_file)
         for k, v in unigo_data.items():
             for comment in v:
@@ -38,25 +47,45 @@ def read_jsonfile(rmp_path, unigo_path):
                     polarity = ''
                     if int(comment['rating']) < 3:
                         polarity = 'neg'
+                        stripped_body = comment['body'].strip()
+                        comment_ = (stripped_body, polarity)
+                        unigo_neg.append(comment_)
                     else:
                         polarity = 'pos'
-                    stripped_body = comment['body'].strip()
-                    comment_ = (stripped_body, polarity)
-                    unigo_comment_data.append(comment_)
+                        stripped_body = comment['body'].strip()
+                        comment_ = (stripped_body, polarity)
+                        unigo_pos.append(comment_)
+        unigo_comment_data['pos'] = unigo_pos
+        unigo_comment_data['neg'] = unigo_neg
 
     return rmp_comment_data, unigo_comment_data
 
 def preprocess_data(data, prefix):
-    train_data_size = int(len(data) * 0.8)
-    test_data_size = int(len(data) * 0.15)
+    data_pos = data['pos']
+    data_neg = data['neg']
 
-    train_data = data[:train_data_size]
-    test_data = data[train_data_size:train_data_size+test_data_size]
-    eval_data = data[train_data_size+test_data_size:]
+    train_data_size = 5000
+    test_data_size = 500
 
-    print(prefix, len(train_data))
-    print(prefix, len(test_data))
-    print(prefix, len(eval_data))
+    train_data_neg = data_neg[:train_data_size]
+    test_data_neg = data_neg[train_data_size:train_data_size+test_data_size]
+    eval_data_neg = data_neg[train_data_size+test_data_size:]
+
+    train_data_pos = data_pos[:train_data_size]
+    test_data_pos = data_pos[train_data_size:train_data_size+test_data_size]
+    eval_data_pos = data_pos[train_data_size+test_data_size:]
+
+    print(prefix, len(train_data_neg))
+    print(prefix, len(test_data_neg))
+    print(prefix, len(eval_data_neg))
+
+    print(prefix, len(train_data_pos))
+    print(prefix, len(test_data_pos))
+    print(prefix, len(eval_data_pos))
+
+    train_data = train_data_neg + train_data_pos
+    test_data = test_data_neg + test_data_pos
+    eval_data = eval_data_neg + eval_data_pos
 
     train_data_path = '../preprocess_data/' + prefix + '_train_data.csv'
     test_data_path = '../preprocess_data/' + prefix + '_test_data.csv'
