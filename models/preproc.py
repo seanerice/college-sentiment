@@ -151,6 +151,11 @@ if __name__ == "__main__":
     rmp_file = '../rmp_data.json'
     unigo_file = '../unigo_data.json'
 
+    # all_s = []
+
+    # num_train, num_test, num_eval = 0.6, 0.25, 0.15
+    # train_s, test_s, eval_s = [], [], []
+
     rmp_data, unigo_data = read_jsonfile(rmp_file, unigo_file)
 
     #preprocess_data(rmp_data, 'RMP')

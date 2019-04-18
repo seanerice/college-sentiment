@@ -54,17 +54,21 @@ if __name__ == "__main__":
     # load data from file
     train_s, test_s, eval_s = None, None, None
     if (args.train is not None):
+        print("Reading train data.")
         train_s = file_reader(args.train)
         random.shuffle(train_s)
     if (args.test is not None):
+        print("Reading test data.")
         test_s = file_reader(args.test)
         random.shuffle(test_s)
     if (args.eval is not None):
+        print("Reading eval data.")
         eval_s = file_reader(args.eval)
         random.shuffle(eval_s)
     #print(train_s, test_s, eval_s)
 
     # Pick model type
+    print("Using model TBSentiment.")
     model_type = TBSentiment
 
     # create new model or load existing model
