@@ -78,10 +78,11 @@ if __name__ == "__main__":
         if (train_s is not None):
             model_obj.train(train_s, eval=eval_s, d_print=True)
 
+        print('done training')
+
+        print('writing to file')
         file = open(args.save, 'wb')
         pickle.dump(model_obj, file)
-
-        print('done training')
     
     if (test_s is not None):
         accuracy = model_obj.test(test_s)
