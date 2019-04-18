@@ -11,6 +11,7 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     if args.model is not None:
+        print("loading model")
         loader = open(args.model, 'rb')
         model_obj = pickle.load(loader)
 
@@ -28,7 +29,7 @@ if __name__ == '__main__':
                     top_neg = []
                     avg_pol = 0
                     i = 0
-                
+
                     for comment in data[k]:
                         pol, con = model_obj.classify(comment)
                         

@@ -79,8 +79,11 @@ if __name__ == "__main__":
         model_obj = model_type()
 
         # train model on train-data
-        if (train_s is not None):
-            model_obj.train(train_s, eval=eval_s, d_print=True)
+        batch_size = 1000
+        if (args.train is not None):
+            for i in range(0, 3000, batch_size):
+                print("Processing", i+batch_size, "of", len(train_s))
+                model_obj.train(train_s[i:i+batch_size], eval=eval_s, d_print=True)
 
         print('done training')
 

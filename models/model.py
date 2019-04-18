@@ -1,5 +1,6 @@
 from textblob import TextBlob
 from textblob.classifiers import NaiveBayesClassifier
+import _pickle as pickle
 
 class DataParser:
     def __init__(self):
