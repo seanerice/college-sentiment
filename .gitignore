@@ -2,3 +2,5 @@ rmp_data.json
 unigo_data.json
 preprocess_data/
 reddit_data.json
+models/__pycache__/model.cpython-37.pyc
+college_comments.json
