@@ -64,7 +64,7 @@ def preprocess_data(data, prefix):
     data_pos = data['pos']
     data_neg = data['neg']
 
-    train_data_size = 5000
+    train_data_size = 3000
     test_data_size = 500
 
     train_data_neg = data_neg[:train_data_size]
@@ -158,5 +158,5 @@ if __name__ == "__main__":
 
     rmp_data, unigo_data = read_jsonfile(rmp_file, unigo_file)
 
-    preprocess_data(rmp_data, 'RMP')
+    #preprocess_data(rmp_data, 'RMP')
     preprocess_data(unigo_data, 'UNIGO')
