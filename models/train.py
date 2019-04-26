@@ -13,7 +13,7 @@ usage: train.py [-h] [--all [ALL]] [--train [TRAIN]] [--test [TEST]]
 import argparse
 import json
 import csv
-from model import TBSentiment
+from model import TBSentiment, SVMSentiment
 import random
 import _pickle as pickle
 
@@ -42,11 +42,13 @@ if __name__ == "__main__":
     parser.add_argument('--test', type=str, nargs='?')  # File for test data
     parser.add_argument('--eval', type=str, nargs='?')  # File for eval data
     parser.add_argument('--model', type=str, nargs='?') # Previous model file
+    parser.add_argument('--model-type', type=str, default="TBSentiment")
     parser.add_argument('--save', type=str, nargs='?')  # path to save model to
     # Model types
     parser.add_argument('--blob', action='store_true')
     parser.add_argument('--ngram', action='store_true')
     args = parser.parse_args()
+    print(args)
 
     # plaintext file-reader
     file_reader = read_csv
@@ -69,7 +71,11 @@ if __name__ == "__main__":
 
     # Pick model type
     print("Using model TBSentiment.")
-    model_type = TBSentiment
+    model_type = SVMSentiment
+    if (args.model_type == "TBSentiment"):
+        model_type = TBSentiment
+    elif (args.model_type == "SVMSentiment"):
+        model_type == SVMSentiment
 
     # create new model or load existing model
     if args.model is not None:
@@ -79,11 +85,8 @@ if __name__ == "__main__":
         model_obj = model_type()
 
         # train model on train-data
-        batch_size = 1000
-        if (args.train is not None):
-            for i in range(0, 3000, batch_size):
-                print("Processing", i+batch_size, "of", len(train_s))
-                model_obj.train(train_s[i:i+batch_size], eval=eval_s, d_print=True)
+        print("Training...")
+        model_obj.train(train_s[:1000], eval=eval_s)
 
         print('done training')
 
